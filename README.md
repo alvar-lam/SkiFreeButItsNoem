@@ -1,6 +1,6 @@
 # SkiFreeButItsNoem
 
-A SkiFree-inspired browser game where you play as a dog skiing down a mountain — but instead of the Abominable Snowman, Kristi Noem is chasing you.
+A very normal SkiFree-inspired browser game where you play as a dog skiing down a mountain — but instead of the Abominable Snowman, Kristi Noem is chasing you.
 
 Built with React, HTML Canvas, and [98.css](https://jdan.github.io/98.css/) for that authentic Windows 98 aesthetic.
 
