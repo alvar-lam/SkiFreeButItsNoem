@@ -1,0 +1,66 @@
+.desktop {
+  padding: 20px;
+}
+
+.game-window {
+  width: fit-content;
+}
+
+.game-body {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.canvas-container {
+  position: relative;
+  width: 640px;
+  height: 480px;
+  overflow: hidden;
+}
+
+canvas {
+  display: block;
+}
+
+/* Dialog overlays */
+.dialog-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 10;
+}
+
+.dialog-window {
+  width: 300px;
+}
+
+.dialog-window .window-body {
+  padding: 12px;
+}
+
+.dialog-window ul {
+  list-style: none;
+  padding-left: 4px;
+}
+
+.dialog-window li {
+  margin: 4px 0;
+  font-size: 12px;
+}
+
+/* Status bar tweaks */
+.status-bar {
+  display: flex;
+}
+
+.status-bar-field {
+  font-size: 12px;
+  flex: 1;
+  text-align: center;
+}
