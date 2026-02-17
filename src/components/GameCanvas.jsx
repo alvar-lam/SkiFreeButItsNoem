@@ -1,14 +1,22 @@
 import { useRef, useEffect, useCallback } from 'react';
-import { CANVAS_WIDTH, CANVAS_HEIGHT } from '../game/constants.js';
+import { CANVAS_WIDTH, CANVAS_HEIGHT, SKIER_MAX_SPEED } from '../game/constants.js';
 import { createGameState, updateGame, getSpeedLabel } from '../game/engine.js';
 import { render } from '../game/renderer.js';
+import {
+  initAudio, startSwoosh, updateSwoosh, stopSwoosh,
+  playCrash, playJump, playBoost, playSnowmanAppear, playGameOver,
+} from '../game/sounds.js';
 
 export default function GameCanvas({ onStatusChange }) {
   const canvasRef = useRef(null);
   const stateRef = useRef(null);
   const rafRef = useRef(null);
+  const soundFlags = useRef({ snowmanPlayed: false, wasPlaying: false });
 
   const startGame = useCallback(() => {
+    initAudio();
+    startSwoosh();
+    soundFlags.current = { snowmanPlayed: false, wasPlaying: true };
     stateRef.current = createGameState();
     stateRef.current.status = 'playing';
     onStatusChange?.({ status: 'playing', distance: 0, score: 0, speed: 'Medium' });
@@ -60,6 +68,11 @@ export default function GameCanvas({ onStatusChange }) {
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
 
+    // Track previous state for sound triggers
+    let prevCrashed = false;
+    let prevJumping = false;
+    let prevBoosting = false;
+
     // Game loop
     function gameLoop() {
       const state = stateRef.current;
@@ -70,13 +83,50 @@ export default function GameCanvas({ onStatusChange }) {
       if (state.status === 'playing') {
         updateGame(state, now);
 
+        // Sound triggers
+        const sk = state.skier;
+
+        // Swoosh (continuous wind based on speed)
+        updateSwoosh(sk.speed, SKIER_MAX_SPEED);
+
+        // Crash sound
+        if (sk.crashed && !prevCrashed) {
+          playCrash();
+        }
+        prevCrashed = sk.crashed;
+
+        // Jump sound
+        if (sk.jumping && !prevJumping) {
+          playJump();
+        }
+        prevJumping = sk.jumping;
+
+        // Boost sound
+        if (sk.boosting && !prevBoosting) {
+          playBoost();
+        }
+        prevBoosting = sk.boosting;
+
+        // Snowman appear sound (once)
+        if (state.snowman && !soundFlags.current.snowmanPlayed) {
+          playSnowmanAppear();
+          soundFlags.current.snowmanPlayed = true;
+        }
+
         onStatusChange?.({
           status: state.status,
           distance: Math.floor(state.distance),
           score: Math.floor(state.distance) + state.score,
-          speed: getSpeedLabel(state.skier.speed),
+          speed: getSpeedLabel(state.skier.speed, state.skier.boosting),
           snowmanActive: !!state.snowman,
         });
+      }
+
+      // Game over sound
+      if (state.status === 'over' && soundFlags.current.wasPlaying) {
+        soundFlags.current.wasPlaying = false;
+        stopSwoosh();
+        playGameOver();
       }
 
       render(ctx, state, now);
@@ -89,6 +139,7 @@ export default function GameCanvas({ onStatusChange }) {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      stopSwoosh();
     };
   }, [onStatusChange, startGame, restartGame]);
 

@@ -11,6 +11,7 @@ import {
   COLLISION_SHRINK,
   SNOWMAN_APPEAR_DISTANCE, SNOWMAN_SPEED, SNOWMAN_CATCH_DIST,
   JUMP_DURATION_MS, JUMP_BONUS,
+  BOOST_SPEED, BOOST_DURATION_MS, BOOST_COOLDOWN_MS,
   METERS_PER_PIXEL,
 } from './constants.js';
 
@@ -26,6 +27,9 @@ export function createGameState() {
       crashTime: 0,
       jumping: false,
       jumpStart: 0,
+      boosting: false,
+      boostStart: 0,
+      boostCooldownEnd: 0,
     },
     camera: { y: 0 },
     obstacles: [],
@@ -85,6 +89,17 @@ export function updateGame(state, now) {
     }
   }
 
+  // Handle boost
+  if (state.skier.boosting) {
+    if (now - state.skier.boostStart > BOOST_DURATION_MS) {
+      state.skier.boosting = false;
+      state.skier.boostCooldownEnd = now + BOOST_COOLDOWN_MS;
+      state.skier.speed = SKIER_MAX_SPEED;
+    } else {
+      state.skier.speed = BOOST_SPEED;
+    }
+  }
+
   // Process input
   processInput(state);
 
@@ -96,8 +111,9 @@ export function updateGame(state, now) {
   state.skier.x = Math.max(20, Math.min(CANVAS_WIDTH - 20, state.skier.x));
 
   // Move camera (world scrolls down)
-  state.camera.y += state.skier.speed;
-  state.distance += state.skier.speed * METERS_PER_PIXEL;
+  const effectiveSpeed = state.skier.boosting ? BOOST_SPEED : state.skier.speed;
+  state.camera.y += effectiveSpeed;
+  state.distance += effectiveSpeed * METERS_PER_PIXEL;
 
   // Spawn obstacles
   spawnObstacles(state);
@@ -138,10 +154,23 @@ function processInput(state) {
     else if (state.skier.direction < DIR_STRAIGHT) state.skier.direction++;
   }
 
-  if (keys['ArrowDown']) {
-    state.skier.speed = Math.min(SKIER_MAX_SPEED, state.skier.speed + SKIER_ACCEL);
-  } else if (keys['ArrowUp']) {
-    state.skier.speed = Math.max(SKIER_MIN_SPEED, state.skier.speed - SKIER_DECEL);
+  if (!state.skier.boosting) {
+    if (keys['ArrowDown']) {
+      state.skier.speed = Math.min(SKIER_MAX_SPEED, state.skier.speed + SKIER_ACCEL);
+    } else if (keys['ArrowUp']) {
+      state.skier.speed = Math.max(SKIER_MIN_SPEED, state.skier.speed - SKIER_DECEL);
+    }
+  }
+
+  // F key boost
+  if (keys['f'] || keys['F']) {
+    const now = performance.now();
+    if (!state.skier.boosting && now > state.skier.boostCooldownEnd) {
+      state.skier.boosting = true;
+      state.skier.boostStart = now;
+    }
+    keys['f'] = false;
+    keys['F'] = false;
   }
 }
 
@@ -215,29 +244,32 @@ function updateSnowman(state, now) {
   const distMeters = state.distance;
 
   if (!state.snowman && distMeters >= SNOWMAN_APPEAR_DISTANCE) {
-    // Spawn snowman behind the skier (above screen)
+    // Spawn snowman at the top of the visible screen
     state.snowman = {
       x: CANVAS_WIDTH / 2 + (Math.random() - 0.5) * 200,
-      y: state.camera.y - 60,
+      y: state.camera.y + 20,
     };
   }
 
   if (state.snowman) {
-    // Chase the skier
+    // Snowman has its own fixed speed — does NOT inherit camera scroll
+    // This means boosting actually creates distance
     const targetX = state.skier.x;
     const targetY = state.skier.y + state.camera.y;
     const dx = targetX - state.snowman.x;
     const dy = targetY - state.snowman.y;
     const dist = Math.sqrt(dx * dx + dy * dy);
 
-    if (dist > 0) {
-      const speed = SNOWMAN_SPEED + (state.skier.speed > SKIER_DEFAULT_SPEED ? 1 : 0);
-      state.snowman.x += (dx / dist) * speed;
-      state.snowman.y += (dy / dist) * speed;
-    }
+    // Snowman is always slightly faster than the skier — unless boosting
+    const skierEffective = state.skier.boosting ? BOOST_SPEED : state.skier.speed;
+    const snowmanTotalSpeed = state.skier.boosting
+      ? BOOST_SPEED * 0.6   // boost outpaces the snowman
+      : skierEffective + 1.5; // otherwise snowman gains slowly
 
-    // Also push snowman forward with camera so it doesn't fall behind
-    state.snowman.y += state.skier.speed * 0.3;
+    if (dist > 0) {
+      state.snowman.x += (dx / dist) * snowmanTotalSpeed;
+      state.snowman.y += (dy / dist) * snowmanTotalSpeed;
+    }
 
     // Check if snowman caught skier
     if (dist < SNOWMAN_CATCH_DIST) {
@@ -260,7 +292,8 @@ function updateSnowParticles(state) {
   }
 }
 
-export function getSpeedLabel(speed) {
+export function getSpeedLabel(speed, boosting) {
+  if (boosting) return '🔥 TURBO';
   if (speed >= SKIER_MAX_SPEED * 0.8) return 'Blazing';
   if (speed >= SKIER_MAX_SPEED * 0.5) return 'Fast';
   if (speed >= SKIER_DEFAULT_SPEED) return 'Medium';

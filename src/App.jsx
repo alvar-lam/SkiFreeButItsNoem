@@ -55,7 +55,7 @@ export default function App() {
             Speed: {gameInfo.speed}
           </p>
           <p className="status-bar-field">
-            {gameInfo.snowmanActive ? '🏔️ ⚠️' : '⛷️'}
+            {gameInfo.snowmanActive ? '🏔️ ⚠️' : '🐕'}
           </p>
         </div>
       </div>

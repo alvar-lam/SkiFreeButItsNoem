@@ -49,5 +49,10 @@ export const SNOWMAN_CATCH_DIST = 20;
 export const JUMP_DURATION_MS = 600;
 export const JUMP_BONUS = 50;
 
+// Speed boost (F key)
+export const BOOST_SPEED = 12;
+export const BOOST_DURATION_MS = 3000;
+export const BOOST_COOLDOWN_MS = 10000;
+
 // Scoring
 export const METERS_PER_PIXEL = 0.5;

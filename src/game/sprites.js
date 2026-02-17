@@ -3,86 +3,26 @@
 export function drawSkier(ctx, x, y, direction) {
   ctx.save();
   ctx.translate(x, y);
+  ctx.font = '28px serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
 
   if (direction === 99) {
-    // Crash
-    drawCrashedSkier(ctx);
+    // Crashed — dizzy dog
+    ctx.fillText('🐕', 0, -2);
+    ctx.font = '10px serif';
+    const t = Date.now();
+    const a = t * 0.004;
+    ctx.fillText('💫', Math.cos(a) * 14, -16 + Math.sin(a) * 5);
+    ctx.fillText('💫', Math.cos(a + 3) * 14, -16 + Math.sin(a + 3) * 5);
   } else {
-    drawSkiingSkier(ctx, direction);
+    if (direction < 0) {
+      ctx.scale(-1, 1);
+    }
+    ctx.fillText('🐕', 0, -2);
   }
 
   ctx.restore();
-}
-
-function drawSkiingSkier(ctx, dir) {
-  // Head
-  ctx.fillStyle = '#FFD700';
-  ctx.beginPath();
-  ctx.arc(0, -10, 5, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Body
-  ctx.fillStyle = '#2244CC';
-  ctx.fillRect(-4, -5, 8, 14);
-
-  // Skis
-  ctx.strokeStyle = '#CC0000';
-  ctx.lineWidth = 2;
-
-  const lean = dir * 4;
-
-  // Left ski
-  ctx.beginPath();
-  ctx.moveTo(-4 + lean, 9);
-  ctx.lineTo(-6 + lean * 1.5, 18);
-  ctx.stroke();
-
-  // Right ski
-  ctx.beginPath();
-  ctx.moveTo(4 + lean, 9);
-  ctx.lineTo(2 + lean * 1.5, 18);
-  ctx.stroke();
-
-  // Poles
-  ctx.strokeStyle = '#666';
-  ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(-4, 0);
-  ctx.lineTo(-10 - lean, 12);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(4, 0);
-  ctx.lineTo(10 - lean, 12);
-  ctx.stroke();
-}
-
-function drawCrashedSkier(ctx) {
-  // Tumbled skier
-  ctx.fillStyle = '#FFD700';
-  ctx.beginPath();
-  ctx.arc(-6, -2, 5, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.fillStyle = '#2244CC';
-  ctx.fillRect(-3, -4, 12, 6);
-
-  // Skis flying
-  ctx.strokeStyle = '#CC0000';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(8, -8);
-  ctx.lineTo(16, -14);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(-8, 4);
-  ctx.lineTo(-16, 8);
-  ctx.stroke();
-
-  // Stars (ouch)
-  ctx.fillStyle = '#FFD700';
-  ctx.font = '10px sans-serif';
-  ctx.fillText('*', 8, -4);
-  ctx.fillText('*', -12, -8);
 }
 
 export function drawSkierJumping(ctx, x, y, progress) {
@@ -92,34 +32,19 @@ export function drawSkierJumping(ctx, x, y, progress) {
   const lift = Math.sin(progress * Math.PI) * 20;
   const scale = 1 + Math.sin(progress * Math.PI) * 0.3;
 
+  // Shadow
+  ctx.fillStyle = 'rgba(0,0,0,0.15)';
+  ctx.beginPath();
+  ctx.ellipse(0, 12, 10 * (1 / scale), 3, 0, 0, Math.PI * 2);
+  ctx.fill();
+
   ctx.translate(0, -lift);
   ctx.scale(scale, scale);
 
-  // Shadow
-  ctx.fillStyle = 'rgba(0,0,0,0.2)';
-  ctx.beginPath();
-  ctx.ellipse(0, 10 + lift, 8 * (1 / scale), 3, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Draw skier in tuck position
-  ctx.fillStyle = '#FFD700';
-  ctx.beginPath();
-  ctx.arc(0, -8, 5, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.fillStyle = '#2244CC';
-  ctx.fillRect(-5, -3, 10, 10);
-
-  ctx.strokeStyle = '#CC0000';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(-5, 7);
-  ctx.lineTo(-5, 14);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(5, 7);
-  ctx.lineTo(5, 14);
-  ctx.stroke();
+  ctx.font = '28px serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('🐕', 0, -2);
 
   ctx.restore();
 }
@@ -128,11 +53,9 @@ export function drawTree(ctx, x, y) {
   ctx.save();
   ctx.translate(x, y);
 
-  // Trunk
   ctx.fillStyle = '#8B4513';
   ctx.fillRect(-2, 10, 4, 10);
 
-  // Foliage layers
   ctx.fillStyle = '#228B22';
   ctx.beginPath();
   ctx.moveTo(0, -16);
@@ -148,7 +71,6 @@ export function drawTree(ctx, x, y) {
   ctx.closePath();
   ctx.fill();
 
-  // Snow on top
   ctx.fillStyle = '#FFF';
   ctx.beginPath();
   ctx.moveTo(0, -16);
@@ -198,7 +120,6 @@ export function drawStump(ctx, x, y) {
   ctx.ellipse(0, -2, 6, 3, 0, 0, Math.PI * 2);
   ctx.fill();
 
-  // Rings
   ctx.strokeStyle = '#6B3410';
   ctx.lineWidth = 0.5;
   ctx.beginPath();
@@ -228,76 +149,39 @@ export function drawRamp(ctx, x, y) {
   ctx.lineTo(14, -6);
   ctx.stroke();
 
-  // Snow on ramp
   ctx.fillStyle = 'rgba(255,255,255,0.5)';
   ctx.fillRect(-10, -1, 20, 3);
 
   ctx.restore();
 }
 
+// Preload monster image
+const monsterImg = new Image();
+monsterImg.src = '/monster.png';
+let monsterLoaded = false;
+monsterImg.onload = () => { monsterLoaded = true; };
+
+const MONSTER_DRAW_W = 50;
+const MONSTER_DRAW_H = 60;
+
 export function drawSnowman(ctx, x, y, frame) {
   ctx.save();
   ctx.translate(x, y);
 
-  // Bobbing animation
   const bob = Math.sin(frame * 0.2) * 2;
 
-  // Body
-  ctx.fillStyle = '#FFF';
-  ctx.beginPath();
-  ctx.ellipse(0, 10 + bob, 12, 10, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.strokeStyle = '#CCC';
-  ctx.lineWidth = 1;
-  ctx.stroke();
-
-  // Upper body
-  ctx.fillStyle = '#FFF';
-  ctx.beginPath();
-  ctx.ellipse(0, -4 + bob, 9, 8, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.stroke();
-
-  // Head
-  ctx.beginPath();
-  ctx.arc(0, -16 + bob, 7, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.stroke();
-
-  // Eyes (angry)
-  ctx.fillStyle = '#000';
-  ctx.fillRect(-4, -19 + bob, 3, 2);
-  ctx.fillRect(1, -19 + bob, 3, 2);
-
-  // Angry eyebrows
-  ctx.strokeStyle = '#000';
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  ctx.moveTo(-5, -21 + bob);
-  ctx.lineTo(-2, -20 + bob);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(5, -21 + bob);
-  ctx.lineTo(2, -20 + bob);
-  ctx.stroke();
-
-  // Mouth
-  ctx.beginPath();
-  ctx.arc(0, -13 + bob, 3, 0.2, Math.PI - 0.2);
-  ctx.stroke();
-
-  // Arms (reaching)
-  ctx.strokeStyle = '#8B4513';
-  ctx.lineWidth = 2;
-  const armWave = Math.sin(frame * 0.3) * 10;
-  ctx.beginPath();
-  ctx.moveTo(-9, -4 + bob);
-  ctx.lineTo(-18, -10 + bob + armWave);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(9, -4 + bob);
-  ctx.lineTo(18, -10 + bob - armWave);
-  ctx.stroke();
+  if (monsterLoaded) {
+    ctx.drawImage(
+      monsterImg,
+      -MONSTER_DRAW_W / 2,
+      -MONSTER_DRAW_H / 2 + bob,
+      MONSTER_DRAW_W,
+      MONSTER_DRAW_H,
+    );
+  } else {
+    ctx.fillStyle = '#888';
+    ctx.fillRect(-15, -20 + bob, 30, 40);
+  }
 
   ctx.restore();
 }

@@ -7,10 +7,10 @@ export default function StartScreen() {
         </div>
         <div className="window-body">
           <p style={{ textAlign: 'center', margin: '8px 0' }}>
-            <span style={{ fontSize: '32px' }}>⛷️</span>
+            <span style={{ fontSize: '32px' }}>🐕</span>
           </p>
           <p style={{ margin: '8px 0' }}>
-            Ski down the mountain and avoid obstacles!
+            Help your dog ski down the mountain!
           </p>
           <ul className="tree-view" style={{ margin: '8px 0', padding: '4px 8px' }}>
             <li><b>←→</b> Steer left/right</li>
