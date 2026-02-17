@@ -3,7 +3,7 @@ export default function StartScreen() {
     <div className="dialog-overlay">
       <div className="window dialog-window">
         <div className="title-bar">
-          <div className="title-bar-text">Welcome to SkiFree!</div>
+          <div className="title-bar-text">Welcome to SkiFreeButItsNoem!</div>
         </div>
         <div className="window-body">
           <p style={{ textAlign: 'center', margin: '8px 0' }}>

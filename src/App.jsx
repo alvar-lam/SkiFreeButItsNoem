@@ -38,7 +38,7 @@ export default function App() {
     <div className="desktop">
       <div className="window game-window">
         <div className="title-bar">
-          <div className="title-bar-text">SkiFree</div>
+          <div className="title-bar-text">SkiFreeButItsNoem</div>
           <div className="title-bar-controls">
             <button aria-label="Minimize"></button>
             <button aria-label="Maximize"></button>
