@@ -1,4 +1,5 @@
-export default function GameOver({ score, distance }) {
+export default function GameOver({ score, bestScore }) {
+  const isNewBest = score >= bestScore;
   return (
     <div className="dialog-overlay">
       <div className="window dialog-window">
@@ -10,12 +11,12 @@ export default function GameOver({ score, distance }) {
             <span style={{ fontSize: '32px' }}>☠️</span>
           </p>
           <p style={{ textAlign: 'center', fontWeight: 'bold', margin: '4px 0' }}>
-            The Abominable Snowman caught you!
+            Kristi Noem caught your dog!
           </p>
           <fieldset style={{ margin: '8px 0' }}>
             <legend>Results</legend>
-            <p>Distance: <b>{distance}m</b></p>
-            <p>Score: <b>{score}</b></p>
+            <p>Score: <b>{score}</b>{isNewBest && ' — New Best!'}</p>
+            <p>Best: <b>{bestScore}</b></p>
           </fieldset>
           <div style={{ textAlign: 'center', marginTop: '12px' }}>
             <button

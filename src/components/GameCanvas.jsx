@@ -11,7 +11,7 @@ export default function GameCanvas({ onStatusChange }) {
   const canvasRef = useRef(null);
   const stateRef = useRef(null);
   const rafRef = useRef(null);
-  const soundFlags = useRef({ snowmanPlayed: false, wasPlaying: false });
+  const soundFlags = useRef({ snowmanOnScreen: false, wasPlaying: false });
 
   const startGame = useCallback(() => {
     initAudio();
@@ -107,10 +107,14 @@ export default function GameCanvas({ onStatusChange }) {
         }
         prevBoosting = sk.boosting;
 
-        // Snowman appear sound (once)
-        if (state.snowman && !soundFlags.current.snowmanPlayed) {
-          playSnowmanAppear();
-          soundFlags.current.snowmanPlayed = true;
+        // Snowman appear sound (plays each time it enters the visible screen)
+        if (state.snowman) {
+          const smScreenY = state.snowman.y - state.camera.y;
+          const smOnScreen = smScreenY > -30 && smScreenY < CANVAS_HEIGHT + 30;
+          if (smOnScreen && !soundFlags.current.snowmanOnScreen) {
+            playSnowmanAppear();
+          }
+          soundFlags.current.snowmanOnScreen = smOnScreen;
         }
 
         onStatusChange?.({

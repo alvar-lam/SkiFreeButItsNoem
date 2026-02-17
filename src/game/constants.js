@@ -24,19 +24,19 @@ export const DIR_CRASH = 99;
 
 // Obstacles
 export const OBSTACLE_TYPES = ['tree', 'rock', 'stump', 'ramp'];
-export const OBSTACLE_SPAWN_RATE = 0.06; // per frame
+export const OBSTACLE_SPAWN_RATE = 0.1; // per frame
 export const OBSTACLE_BUFFER = 100; // spawn ahead of screen
-export const TREE_WIDTH = 24;
-export const TREE_HEIGHT = 36;
-export const ROCK_WIDTH = 20;
-export const ROCK_HEIGHT = 16;
-export const STUMP_WIDTH = 16;
-export const STUMP_HEIGHT = 12;
-export const RAMP_WIDTH = 30;
-export const RAMP_HEIGHT = 12;
+export const TREE_WIDTH = 36;
+export const TREE_HEIGHT = 50;
+export const ROCK_WIDTH = 32;
+export const ROCK_HEIGHT = 24;
+export const STUMP_WIDTH = 26;
+export const STUMP_HEIGHT = 20;
+export const RAMP_WIDTH = 40;
+export const RAMP_HEIGHT = 16;
 
 // Collision box shrink (forgiving hitboxes)
-export const COLLISION_SHRINK = 6;
+export const COLLISION_SHRINK = 4;
 
 // Snowman
 export const SNOWMAN_APPEAR_DISTANCE = 2000;

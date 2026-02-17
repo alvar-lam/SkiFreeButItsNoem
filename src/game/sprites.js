@@ -52,6 +52,7 @@ export function drawSkierJumping(ctx, x, y, progress) {
 export function drawTree(ctx, x, y) {
   ctx.save();
   ctx.translate(x, y);
+  ctx.scale(1.5, 1.4);
 
   ctx.fillStyle = '#8B4513';
   ctx.fillRect(-2, 10, 4, 10);
@@ -85,6 +86,7 @@ export function drawTree(ctx, x, y) {
 export function drawRock(ctx, x, y) {
   ctx.save();
   ctx.translate(x, y);
+  ctx.scale(1.6, 1.5);
 
   ctx.fillStyle = '#808080';
   ctx.beginPath();
@@ -111,6 +113,7 @@ export function drawRock(ctx, x, y) {
 export function drawStump(ctx, x, y) {
   ctx.save();
   ctx.translate(x, y);
+  ctx.scale(1.6, 1.6);
 
   ctx.fillStyle = '#8B4513';
   ctx.fillRect(-6, -2, 12, 8);
@@ -132,6 +135,7 @@ export function drawStump(ctx, x, y) {
 export function drawRamp(ctx, x, y) {
   ctx.save();
   ctx.translate(x, y);
+  ctx.scale(1.4, 1.3);
 
   ctx.fillStyle = '#DEB887';
   ctx.beginPath();

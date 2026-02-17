@@ -17,7 +17,7 @@ export default function StartScreen() {
             <li><b>↓</b> Speed up</li>
             <li><b>↑</b> Slow down</li>
             <li>Hit ramps to jump for bonus points</li>
-            <li>Watch out for the Abominable Snowman!</li>
+            <li>Watch out for Kristi Noem!</li>
           </ul>
           <div style={{ textAlign: 'center', marginTop: '12px' }}>
             <button

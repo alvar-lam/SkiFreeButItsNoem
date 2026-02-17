@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import GameCanvas from './components/GameCanvas';
 import StartScreen from './components/StartScreen';
 import GameOver from './components/GameOver';
@@ -12,9 +12,19 @@ export default function App() {
     speed: 'Medium',
     snowmanActive: false,
   });
+  const bestScoreRef = useRef(0);
+  const [bestScore, setBestScore] = useState(0);
 
   const handleStatusChange = useCallback((info) => {
     setGameInfo(prev => {
+      // Track best score when game ends
+      if (info.status === 'over' && prev.status !== 'over') {
+        const finalScore = info.score;
+        if (finalScore > bestScoreRef.current) {
+          bestScoreRef.current = finalScore;
+          setBestScore(finalScore);
+        }
+      }
       if (
         prev.status === info.status &&
         prev.distance === info.distance &&
@@ -40,7 +50,7 @@ export default function App() {
             <GameCanvas onStatusChange={handleStatusChange} />
             {gameInfo.status === 'start' && <StartScreen />}
             {gameInfo.status === 'over' && (
-              <GameOver score={gameInfo.score} distance={gameInfo.distance} />
+              <GameOver score={gameInfo.score} bestScore={bestScore} />
             )}
           </div>
         </div>
