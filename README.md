@@ -1,16 +1,33 @@
-# React + Vite
+# SkiFreeButItsNoem
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A SkiFree-inspired browser game where you play as a dog skiing down a mountain — but instead of the Abominable Snowman, Kristi Noem is chasing you.
 
-Currently, two official plugins are available:
+Built with React, HTML Canvas, and [98.css](https://jdan.github.io/98.css/) for that authentic Windows 98 aesthetic.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## How to Play
 
-## React Compiler
+- **Arrow keys** to steer and control speed
+- **F** to activate turbo boost (escape Noem!)
+- Hit **ramps** for jump bonus points
+- Avoid trees, rocks, and stumps
+- Survive as long as you can after 2000m when Noem appears
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech Stack
 
-## Expanding the ESLint configuration
+- Vite + React
+- 98.css (Windows 98 UI chrome)
+- HTML Canvas (game rendering)
+- Web Audio API (sound effects)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Run Locally
+
+```bash
+npm install
+npm run dev
+```
+
+## Build
+
+```bash
+npm run build
+```
