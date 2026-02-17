@@ -76,6 +76,7 @@ export function updateGame(state, now) {
       state.skier.direction = DIR_STRAIGHT;
       state.skier.speed = SKIER_MIN_SPEED;
     } else {
+      updateSnowman(state, now);
       updateSnowParticles(state);
       return state;
     }
